@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <title>Web-GIS with geoserver and leaflet</title>
+</head>
+<style>
+    #map {
+        height: 100vh;
+        width: 100%;
+    }
+</style>
+
+<body>
+    <div id="map"></div>
+</body>
+
+</html>
+<!-- leaflet -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- jquery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- path to the file -->
+<script src="lib/L.Geoserver.js"></script>
+<script>
+    var map = L.map('map').setView([28, 84], 6);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 20,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    // wms request
+    var wmsLayer = L.Geoserver.wms("http://localhost:8080/geoserver/wms", {
+        format: 'image/png',
+        transparent: true,
+        layers: "new:local_level",
+    });
+    wmsLayer.addTo(map);
+    map.on('click', function (e) {
+        alert(e.latlng);
+    });
+</script>
