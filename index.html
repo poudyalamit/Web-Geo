@@ -36,9 +36,41 @@
     var wmsLayer = L.Geoserver.wms("http://localhost:8080/geoserver/wms", {
         format: 'image/png',
         transparent: true,
-        layers: "new:local_level",
+        layers: "new:district",
+        // layers:"new:states" //for only one layer
+        // CQL_FILTER: "", //to filter data
+        attribution: "Nepal wms"
+
     });
     wmsLayer.addTo(map);
+
+    //wfs request
+    var wfsLayer = L.Geoserver.wfs("http://localhost:8080/geoserver/wfs", {
+        layers: "new:local_unit",
+        style: {
+            color: "#00ff00",
+            fillOpacity: "0",
+            opacity: "0.5",
+        },
+        onEachFeature: function (feature, layer) {
+            console.log(feature);
+            layer.bindPopup("this is popuped" + feature.id + layer);
+        },
+    });
+
+    wfsLayer.addTo(map);
+
+    //legend request
+    var layerLegend = L.Geoserver.legend("http://localhost:8080/geoserver/wms", {
+        layers: "new:district",
+        // style: `style file`,
+    });
+
+    layerLegend.addTo(map);
+
+
+    var marker = new L.marker([27.707239, 85.321541]);
+    marker.addTo(map);
     map.on('click', function (e) {
         alert(e.latlng);
     });
