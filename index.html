@@ -62,7 +62,7 @@
 
     //legend request
     var layerLegend = L.Geoserver.legend("http://localhost:8080/geoserver/wms", {
-        layers: "new:district",
+        layers: "new:india",
         // style: `style file`,
     });
 
@@ -81,4 +81,18 @@
     // service=wms&
     // version=1.1.1&
     // request=GetCapabilities
+
+    //wms get map request
+    var wms = 'http://localhost:8080/geoserver/new/wms?service=WMS&version=1.1.0&request=GetMap&layers=new%3Adistrict&bbox=80.05858430104666%2C26.34783707066447%2C88.20166777425237%2C30.46741031601408&width=768&height=388&srs=EPSG%3A4326&styles=&format=application/openlayers';
+
+    var district_layer = L.tileLayer.wms("http://localhost:8080/geoserver/wms", {
+        layers: 'new:district',
+        format: 'image/png',
+        transparent: true,
+        attribution: "© Amit Poudyal"
+    });
+
+    district_layer.addTo(map);
+
+
 </script>
