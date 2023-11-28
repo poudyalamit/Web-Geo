@@ -25,6 +25,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <!-- path to the file -->
 <script src="lib/L.Geoserver.js"></script>
+<!-- betterWMS -->
+<script src="lib/L.TileLayer.BetterWMS.js"></script>
+
 <script>
     var map = L.map('map').setView([28, 84], 6);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -32,33 +35,33 @@
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    // wms request
-    var wmsLayer = L.Geoserver.wms("http://localhost:8080/geoserver/wms", {
-        format: 'image/png',
-        transparent: true,
-        layers: "new:district",
-        // layers:"new:states" //for only one layer
-        // CQL_FILTER: "", //to filter data
-        attribution: "Nepal wms"
+    // // wms request
+    // var wmsLayer = L.Geoserver.wms("http://localhost:8080/geoserver/wms", {
+    //     format: 'image/png',
+    //     transparent: true,
+    //     layers: "new:district",
+    //     // layers:"new:states" //for only one layer
+    //     // CQL_FILTER: "", //to filter data
+    //     attribution: "Nepal wms"
 
-    });
-    wmsLayer.addTo(map);
+    // });
+    // wmsLayer.addTo(map);
 
-    //wfs request
-    var wfsLayer = L.Geoserver.wfs("http://localhost:8080/geoserver/wfs", {
-        layers: "new:local_unit",
-        style: {
-            color: "#00ff00",
-            fillOpacity: "0",
-            opacity: "0.5",
-        },
-        onEachFeature: function (feature, layer) {
-            console.log(feature);
-            layer.bindPopup("this is popuped" + feature.id + layer);
-        },
-    });
+    // //wfs request
+    // var wfsLayer = L.Geoserver.wfs("http://localhost:8080/geoserver/wfs", {
+    //     layers: "new:local_unit",
+    //     style: {
+    //         color: "#00ff00",
+    //         fillOpacity: "0",
+    //         opacity: "0.5",
+    //     },
+    //     onEachFeature: function (feature, layer) {
+    //         console.log(feature);
+    //         layer.bindPopup("this is popuped" + feature.id + layer);
+    //     },
+    // });
 
-    wfsLayer.addTo(map);
+    // wfsLayer.addTo(map);
 
     //legend request
     var layerLegend = L.Geoserver.legend("http://localhost:8080/geoserver/wms", {
@@ -71,9 +74,10 @@
 
     var marker = new L.marker([27.707239, 85.321541]);
     marker.addTo(map);
-    map.on('click', function (e) {
-        alert(e.latlng);
-    });
+    // to get latlng of the point when clicked
+    // map.on('click', function (e) {
+    //     alert(e.latlng);
+    // });
 
     //get capabilities request from geoserver
     //reference:https://docs.geoserver.org/2.21.x/en/user/services/wms/reference.html
@@ -82,10 +86,14 @@
     // version=1.1.1&
     // request=GetCapabilities
 
+    //get legend graphic request
+    // http://localhost:8080/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=20&HEIGHT=20&LAYER=topp:states
+
     //wms get map request
     var wms = 'http://localhost:8080/geoserver/new/wms?service=WMS&version=1.1.0&request=GetMap&layers=new%3Adistrict&bbox=80.05858430104666%2C26.34783707066447%2C88.20166777425237%2C30.46741031601408&width=768&height=388&srs=EPSG%3A4326&styles=&format=application/openlayers';
 
-    var district_layer = L.tileLayer.wms("http://localhost:8080/geoserver/wms", {
+    //betterWms gives the feature information of the point when clicked
+    var district_layer = L.tileLayer.betterWms("http://localhost:8080/geoserver/wms", {
         layers: 'new:district',
         format: 'image/png',
         transparent: true,
